@@ -18,8 +18,12 @@ public class Maze : MonoBehaviour {
 
     public MazeDoor doorPrefab;
 
+    public MazeCell deskPrefab;
+
     [Range(0f, 1f)]
     public float doorProbability;
+
+    private float deskProbability = 0.03f;
 
     public MazeRoomSettings[] roomSettings;
 
@@ -102,7 +106,8 @@ public class Maze : MonoBehaviour {
 
     private MazeCell CreateCell(IntVector2 coordinates)
     {
-        MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
+        MazeCell prefab = Random.value < deskProbability ? deskPrefab : cellPrefab;
+        MazeCell newCell = Instantiate(prefab) as MazeCell;
         cells[coordinates.x, coordinates.z] = newCell;
         newCell.coordinates = coordinates;
         newCell.name = "Maze Cell " + coordinates.x + ", " + coordinates.z;
@@ -114,7 +119,7 @@ public class Maze : MonoBehaviour {
 
     private void CreatePassage (MazeCell cell, MazeCell otherCell, MazeDirection direction)
     {
-        MazePassage prefab = Random.value < doorProbability ? doorPrefab : passagePrefab;
+        MazePassage prefab = Random.value < doorProbability  && cell.tag != "Hide" && otherCell.tag != "Hide" ? doorPrefab : passagePrefab;
         MazePassage passage = Instantiate(prefab) as MazePassage;
         passage.Initialize(cell, otherCell, direction);
         passage = Instantiate(prefab) as MazePassage;

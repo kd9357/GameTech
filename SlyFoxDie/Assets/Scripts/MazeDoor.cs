@@ -6,6 +6,8 @@ public class MazeDoor : MazePassage {
 
     public Transform hinge;
 
+    public Transform switchTrans;
+
     public static Quaternion normalRotation = Quaternion.Euler(0f, -90f, 0f),
                              mirroredRotation = Quaternion.Euler(0f, 90f, 0f);
 
@@ -43,7 +45,7 @@ public class MazeDoor : MazePassage {
         for(int i = 0; i < transform.childCount; ++i)
         {
             Transform child = transform.GetChild(i);
-            if(child != hinge)
+            if(child != hinge && child != switchTrans)
             {
                 child.GetComponent<Renderer>().material = cell.room.settings.wallMaterial;
             }
