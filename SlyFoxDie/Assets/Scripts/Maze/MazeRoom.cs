@@ -23,4 +23,13 @@ public class MazeRoom : ScriptableObject {
             Add(room.cells[i]);
         }
     }
+
+    //Return the number of cells this room contains
+    public int Size
+    {
+        get
+        {
+            return cells.Count;
+        }
+    }
 }

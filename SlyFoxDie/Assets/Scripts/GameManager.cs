@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    #region Public Parameters
     public Maze mazePrefab;
-
-    private Maze mazeInstance;
-
     public Player playerPrefab;
 
+    public Enemy enemyPrefab;
+    #endregion
+
+    #region Private parameters
+    private Maze mazeInstance;
     private Player playerInstance;
+
+    private Enemy enemyInstance;
+    #endregion
 
     // Use this for initialization
     void Start()
@@ -29,10 +35,15 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator BeginGame()
     {
+        //Instantiate Maze
         Camera.main.clearFlags = CameraClearFlags.Skybox;
         Camera.main.rect = new Rect(0f, 0f, 1f, 1f);
         mazeInstance = Instantiate(mazePrefab) as Maze;
         yield return StartCoroutine(mazeInstance.Generate());
+
+        //Instantiate Enemy
+
+        //Instantiate Player
         playerInstance = Instantiate(playerPrefab) as Player;
         playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
         Camera.main.clearFlags = CameraClearFlags.Depth;

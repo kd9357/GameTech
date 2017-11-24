@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Maze : MonoBehaviour {
 
+    #region Public Parameters
     public IntVector2 size;
 
     public MazeCell cellPrefab;
-
-    private MazeCell[,] cells;
 
     public float generationStepDelay;
 
@@ -20,14 +19,21 @@ public class Maze : MonoBehaviour {
 
     public MazeCell deskPrefab;
 
+    public MazeRoomSettings[] roomSettings;
+
     [Range(0f, 1f)]
     public float doorProbability;
 
+    #endregion
+
+    #region Private parameters
     private float deskProbability = 0.03f;
 
-    public MazeRoomSettings[] roomSettings;
+    private MazeCell[,] cells;
 
     private List<MazeRoom> rooms = new List<MazeRoom>();
+
+    #endregion
 
     public MazeCell GetCell (IntVector2 coordinates)
     {

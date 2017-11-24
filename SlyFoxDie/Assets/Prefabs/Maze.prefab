@@ -65,7 +65,6 @@ MonoBehaviour:
     type: 2}
   deskPrefab: {fileID: 114842253795360524, guid: bdda660b0463d134ab4871bafad3ba33,
     type: 2}
-  doorProbability: 0.051
   roomSettings:
   - floorMaterial: {fileID: 2100000, guid: 5f1601a1ff3ee154c863425bdadc86dc, type: 2}
     wallMaterial: {fileID: 2100000, guid: efa3af199a769b44fbfcc19c841fec64, type: 2}
@@ -75,3 +74,4 @@ MonoBehaviour:
     wallMaterial: {fileID: 2100000, guid: 2b5bc4a043760af48a51be3204c2c5d8, type: 2}
   - floorMaterial: {fileID: 2100000, guid: 3cc70467e9bc4f543854f493140e9bb5, type: 2}
     wallMaterial: {fileID: 2100000, guid: 7e63c15a91730e84bb011286a91799fb, type: 2}
+  doorProbability: 0.051
