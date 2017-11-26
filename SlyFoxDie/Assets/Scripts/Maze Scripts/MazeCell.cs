@@ -5,22 +5,41 @@ using UnityEngine;
 public class MazeCell : MonoBehaviour {
 
     public IntVector2 coordinates;
+    public MazeRoom room;
 
     private MazeCellEdge[] edges = new MazeCellEdge[MazeDirections.Count];
-
-    public MazeRoom room;
+    private int initializedEdgeCount;
 
     public void Initialize(MazeRoom room)
     {
         room.Add(this);
         transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
     }
+
+    #region Getters
     public MazeCellEdge GetEdge (MazeDirection direction)
     {
         return edges[(int)direction];
     }
 
-    private int initializedEdgeCount;
+    public MazeCellEdge[] GetEdges()
+    {
+        return edges;
+    }
+    #endregion
+
+    #region Setters
+    public void SetEdge(MazeDirection direction, MazeCellEdge edge)
+    {
+        edges[(int)direction] = edge;
+        initializedEdgeCount += 1;
+    }
+
+    public void SetMaterial(Material m)
+    {
+        transform.GetChild(0).GetComponent<Renderer>().material = m;
+    }
+    #endregion
 
     public bool IsFullyInitialized
     {
@@ -28,12 +47,6 @@ public class MazeCell : MonoBehaviour {
         {
             return initializedEdgeCount == MazeDirections.Count;
         }
-    }
-
-    public void SetEdge (MazeDirection direction, MazeCellEdge edge)
-    {
-        edges[(int)direction] = edge;
-        initializedEdgeCount += 1;
     }
 
     public MazeDirection RandomUninitializedDirection

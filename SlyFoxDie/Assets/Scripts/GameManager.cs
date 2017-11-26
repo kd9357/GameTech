@@ -42,12 +42,22 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(mazeInstance.Generate());
 
         //Instantiate Enemy
+        enemyInstance = Instantiate(enemyPrefab) as Enemy;
+        MazeCell start = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
+        enemyInstance.SetStartLocation(start);
+        MazeCell end = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
+        //Gacky
+        while(end == start)
+        {
+            end = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
+        }
+        enemyInstance.SetEndLocation(end);
 
-        //Instantiate Player
-        playerInstance = Instantiate(playerPrefab) as Player;
-        playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
-        Camera.main.clearFlags = CameraClearFlags.Depth;
-        Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
+        ////Instantiate Player
+        //playerInstance = Instantiate(playerPrefab) as Player;
+        //playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
+        //Camera.main.clearFlags = CameraClearFlags.Depth;
+        //Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
     }
 
     private void RestartGame()
@@ -57,6 +67,10 @@ public class GameManager : MonoBehaviour {
         if (playerInstance != null)
         {
             Destroy(playerInstance.gameObject);
+        }
+        if(enemyInstance != null)
+        {
+            Destroy(enemyInstance.gameObject);
         }
         StartCoroutine(BeginGame());
     }
