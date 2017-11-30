@@ -6,6 +6,8 @@ public class MazeCell : MonoBehaviour {
 
     public IntVector2 coordinates;
     public MazeRoom room;
+    [Tooltip("The cost it takes to move across this cell. Higher costs = greater avoidance")]
+    public int cost = 1;
 
     private MazeCellEdge[] edges = new MazeCellEdge[MazeDirections.Count];
     private int initializedEdgeCount;

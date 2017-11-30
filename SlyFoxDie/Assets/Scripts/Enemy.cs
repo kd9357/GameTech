@@ -25,12 +25,6 @@ public class Enemy : MonoBehaviour {
 		
 	}
 
-    //TODO:
-    //Determine start + end locations
-    //Build open + closed set of traversable cells
-    //Determine heuristic
-    //Once path has been found, retrace and return path
-
     public void SetStartLocation(MazeCell cell)
     {
         if (currentCell != null)
@@ -39,7 +33,7 @@ public class Enemy : MonoBehaviour {
         }
         start = cell;
         currentCell = cell;
-        transform.localPosition = cell.transform.localPosition;
+        transform.localPosition = cell.transform.localPosition + Vector3.up / 2;
         //currentCell.OnPlayerEntered();
     }
 
@@ -62,58 +56,6 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    ////Can use Maze + MazeEdge to get neighbor information
-    //void PathFinding()
-    //{
-    //    //List<MazeCell> openSet = new List<MazeCell>();
-    //    //HashSet<MazeCell> closedSet = new HashSet<MazeCell>();
-
-    //    Dictionary<MazeCell, int> closedSet = new Dictionary<MazeCell, int>();
-    //    List<PathInfo> openSet = new List<PathInfo>();
-
-    //    //openSet.Add(start);
-    //    openSet.Add(new PathInfo(start, new List<MazeCell>(), 0));
-
-    //    while (openSet.Count > 0)
-    //    {
-    //        //TODO: Select the lowest cost in openset first
-    //        //MazeCell cell = openSet[0];
-    //        PathInfo node = openSet[0];
-    //        openSet.Remove(node);
-    //        MazeCell cell = node.cell;
-
-    //        if (cell == end)
-    //        {
-    //            //Return node.path;
-    //            return;
-    //        }
-
-    //        //openSet.Remove(cell);
-    //        //closedSet.Add(cell);
-    //        closedSet.Add(cell, node.cost);
-
-    //        foreach (MazeCellEdge edge in cell.GetEdges())
-    //        {
-    //            MazeCell successor = edge.otherCell;
-    //            if (!(edge is MazePassage) || closedSet.ContainsKey(successor))
-    //                continue;
-
-    //            //int newCostToSuccessor = cell.gCost + GetManhattanDistance(cell, successor);
-    //            int newCostToSuccessor = node.cost + GetManhattanDistance(cell, successor);
-    //            //if (newCostToSuccessor < successor.gCost || !openSet.Contains(successor))
-    //            if (newCostToSuccessor < node.cost || !openSet.Contains(successor))
-    //            {
-    //                successor.gCost = newCostToSuccessor;
-    //                successor.hCost = GetManhattanDistance(successor, end);
-    //                successor.parent = cell; //tracks path
-    //                if (!openSet.Contains(successor))
-    //                    openSet.Add(successor);
-    //            }
-    //        }
-
-    //    }
-    //}
-
     void PathFinding()
     {
         List<PathInfo> fringe = new List<PathInfo>();
@@ -134,6 +76,7 @@ public class Enemy : MonoBehaviour {
             }
             fringe.Remove(node);
 
+            //Check if we've reached our target
             if(node.cell == end)
             {
                 path = node.path;
@@ -141,12 +84,13 @@ public class Enemy : MonoBehaviour {
                 return;
             }
 
+            //Iterate over cell neighbors
             foreach(MazeCellEdge edge in node.cell.GetEdges())
             {
                 MazeCell successor = edge.otherCell;
                 if (!(edge is MazePassage))
                     continue;
-                int g = node.cost; //TODO: change to + successor.cost if we want to have enemy avoid areas
+                int g = node.cost + successor.cost; //TODO: change to + successor.cost if we want to have enemy avoid areas
                 int h = GetManhattanDistance(successor, end);
                 int f = g + h;
                 if(!visited.ContainsKey(successor) || visited[successor] > g)

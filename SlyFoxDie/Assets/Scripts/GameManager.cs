@@ -43,14 +43,10 @@ public class GameManager : MonoBehaviour {
 
         //Instantiate Enemy
         enemyInstance = Instantiate(enemyPrefab) as Enemy;
-        MazeCell start = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
+        List<MazeCell> doors = mazeInstance.GetDoorCells();
+        MazeCell start = doors[0];
         enemyInstance.SetStartLocation(start);
-        MazeCell end = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
-        //Gacky
-        while(end == start)
-        {
-            end = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
-        }
+        MazeCell end = doors[doors.Count - 1];
         enemyInstance.SetEndLocation(end);
 
         ////Instantiate Player

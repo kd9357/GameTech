@@ -33,11 +33,19 @@ public class Maze : MonoBehaviour {
 
     private List<MazeRoom> rooms = new List<MazeRoom>();
 
+    private List<MazeCell> doors = new List<MazeCell>();
+    //private List<MazeCell> obstacles = new List<MazeCell>();
+
     #endregion
 
     public MazeCell GetCell (IntVector2 coordinates)
     {
         return cells[coordinates.x, coordinates.z];
+    }
+
+    public List<MazeCell> GetDoorCells()
+    {
+        return doors;
     }
 
     #region Generation Steps
@@ -120,6 +128,7 @@ public class Maze : MonoBehaviour {
         if(passage is MazeDoor)
         {
             otherCell.Initialize(CreateRoom(cell.room.settingsIndex));
+            doors.Add(otherCell);
         }
         else
         {
