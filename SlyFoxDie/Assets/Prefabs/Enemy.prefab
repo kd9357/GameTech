@@ -204,5 +204,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f81fb52fcf7b4df4a9fd5ac852e93bf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PathMaterial: {fileID: 2100000, guid: dff9479db552fda4599e941f4e3f0894, type: 2}
-  TargetMaterial: {fileID: 2100000, guid: b39c11e3b3f57d04dbb42966a54ac134, type: 2}
+  pathMaterial: {fileID: 2100000, guid: dff9479db552fda4599e941f4e3f0894, type: 2}

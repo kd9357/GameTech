@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
-    public Material PathMaterial;
-    public Material TargetMaterial;
+    public Material pathMaterial;
 
     //TODO: In game manager handle instantiation and destruction of enemy prefab instance
     private MazeCell start;
     private MazeCell end;
-    private List<MazeCell> path;
+    private List<MazeCell> patrolPath;
+    private List<MazeCell> investigationPath;
 
     private MazeCell currentCell;
 
 	// Use this for initialization
 	void Start () {
-        PathFinding();
-        SetPathColor();
-	}
+        patrolPath = PathFinding(start, end);
+        SetPatrolPathColor(Color.red);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -56,14 +56,14 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    void PathFinding()
+    public List<MazeCell> PathFinding(MazeCell initial, MazeCell destination)
     {
         List<PathInfo> fringe = new List<PathInfo>();
         Dictionary<MazeCell, int> visited = new Dictionary<MazeCell, int>();
 
         List<MazeCell> possiblePath = new List<MazeCell>();
-        possiblePath.Add(start);
-        fringe.Add(new PathInfo(start, possiblePath, 0));
+        possiblePath.Add(initial);
+        fringe.Add(new PathInfo(initial, possiblePath, 0));
 
         while(fringe.Count > 0)
         {
@@ -77,11 +77,11 @@ public class Enemy : MonoBehaviour {
             fringe.Remove(node);
 
             //Check if we've reached our target
-            if(node.cell == end)
+            if(node.cell == destination)
             {
-                path = node.path;
-                path.Add(end);
-                return;
+                possiblePath = node.path;
+                possiblePath.Add(destination);
+                break;
             }
 
             //Iterate over cell neighbors
@@ -91,7 +91,7 @@ public class Enemy : MonoBehaviour {
                 if (!(edge is MazePassage))
                     continue;
                 int g = node.cost + successor.cost; //TODO: change to + successor.cost if we want to have enemy avoid areas
-                int h = GetManhattanDistance(successor, end);
+                int h = GetManhattanDistance(successor, destination);
                 int f = g + h;
                 if(!visited.ContainsKey(successor) || visited[successor] > g)
                 {
@@ -102,16 +102,52 @@ public class Enemy : MonoBehaviour {
                 }
             }
         }
+
+        return possiblePath;
     }
 
-    void SetPathColor()
+    public void PathToInvestigate(MazeCell destination)
     {
-        foreach(MazeCell cell in path)
+        investigationPath = PathFinding(start, destination);
+        SetInvestigationPathColor(Color.grey);
+    }
+
+    void SetPatrolPathColor(Color c)
+    {
+        foreach(MazeCell cell in patrolPath)
         {
-            cell.SetMaterial(PathMaterial);
+            cell.SetMaterialColor(c);
         }
-        start.SetMaterial(TargetMaterial);
-        end.SetMaterial(TargetMaterial);
+        patrolPath[0].SetMaterialColor(Color.black);
+        patrolPath[patrolPath.Count - 1].SetMaterialColor(Color.black);
+    }
+
+    void SetInvestigationPathColor(Color c)
+    {
+        foreach(MazeCell cell in investigationPath)
+        {
+            cell.SetMaterialColor(c);
+        }
+    }
+
+    public void ClearPatrolPath()
+    {
+        foreach(MazeCell cell in patrolPath)
+        {
+            cell.ResetMaterialColor();
+        }
+        patrolPath.Clear();
+    }
+
+    public void ClearInvestigationPath()
+    {
+        if (investigationPath == null)
+            return;
+        foreach(MazeCell cell in investigationPath)
+        {
+            cell.ResetMaterialColor();
+        }
+        investigationPath.Clear();
     }
 
     int GetManhattanDistance(MazeCell a, MazeCell b)

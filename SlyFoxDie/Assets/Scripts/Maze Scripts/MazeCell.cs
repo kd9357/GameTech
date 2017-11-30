@@ -8,14 +8,19 @@ public class MazeCell : MonoBehaviour {
     public MazeRoom room;
     [Tooltip("The cost it takes to move across this cell. Higher costs = greater avoidance")]
     public int cost = 1;
+    public Color mouseOverColor;
 
+    private Renderer floorRenderer;
     private MazeCellEdge[] edges = new MazeCellEdge[MazeDirections.Count];
     private int initializedEdgeCount;
+    private Color currentColor;
 
     public void Initialize(MazeRoom room)
     {
         room.Add(this);
-        transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
+        floorRenderer = transform.GetChild(0).GetComponent<Renderer>();
+        floorRenderer.material = room.settings.floorMaterial;
+        currentColor = room.settings.floorMaterial.color;
     }
 
     #region Getters
@@ -39,7 +44,13 @@ public class MazeCell : MonoBehaviour {
 
     public void SetMaterial(Material m)
     {
-        transform.GetChild(0).GetComponent<Renderer>().material = m;
+        floorRenderer.material = m;
+    }
+
+    public void SetMaterialColor(Color c)
+    {
+        //currentColor = c;
+        floorRenderer.material.color = c;
     }
     #endregion
 
@@ -85,5 +96,29 @@ public class MazeCell : MonoBehaviour {
         {
             edges[i].OnPlayerExited();
         }
+    }
+
+    private void OnMouseEnter()
+    {
+        if (GameManager.Instance.gameStarted)
+        {
+            GameManager.Instance.SetDestination(this);
+            //TODO:Should probably set it to a different material, so it's easier to see on any color background
+            floorRenderer.material.color = mouseOverColor;
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        if (GameManager.Instance.gameStarted)
+        {
+            GameManager.Instance.ClearDestination();
+            floorRenderer.material.color = currentColor;
+        }
+    }
+
+    public void ResetMaterialColor()
+    {
+        floorRenderer.material.color = room.settings.floorMaterial.color;
     }
 }
