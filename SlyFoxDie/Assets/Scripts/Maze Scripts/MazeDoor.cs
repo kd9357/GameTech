@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Like a MazePassage, with a door component attached
 public class MazeDoor : MazePassage {
 
     public Transform hinge;
@@ -36,6 +37,7 @@ public class MazeDoor : MazePassage {
         base.Initialize(primary, other, direction);
         if(OtherSideOfDoor != null)
         {
+            //TODO: Should not use negative scale (box colliders have issues)
             isMirrored = true;
             hinge.localScale = new Vector3(-1f, 1f, 1f);
             Vector3 p = hinge.localPosition;

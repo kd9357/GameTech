@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Maze : MonoBehaviour {
 
+    #region Public Parameters
     public IntVector2 size;
 
     public MazeCell cellPrefab;
-
-    private MazeCell[,] cells;
 
     public float generationStepDelay;
 
@@ -20,20 +19,36 @@ public class Maze : MonoBehaviour {
 
     public MazeCell deskPrefab;
 
+    public MazeRoomSettings[] roomSettings;
+
     [Range(0f, 1f)]
     public float doorProbability;
 
+    #endregion
+
+    #region Private parameters
     private float deskProbability = 0.03f;
 
-    public MazeRoomSettings[] roomSettings;
+    private MazeCell[,] cells;
 
     private List<MazeRoom> rooms = new List<MazeRoom>();
+
+    private List<MazeCell> doors = new List<MazeCell>();
+    //private List<MazeCell> obstacles = new List<MazeCell>();
+
+    #endregion
 
     public MazeCell GetCell (IntVector2 coordinates)
     {
         return cells[coordinates.x, coordinates.z];
     }
 
+    public List<MazeCell> GetDoorCells()
+    {
+        return doors;
+    }
+
+    #region Generation Steps
     public IEnumerator Generate()
     {
         WaitForSeconds delay = new WaitForSeconds(generationStepDelay);
@@ -52,21 +67,6 @@ public class Maze : MonoBehaviour {
         MazeCell newCell = CreateCell(RandomCoordinates);
         newCell.Initialize(CreateRoom(-1));
         activeCells.Add(newCell);
-    }
-
-    private void CreatePassageInSameRoom(MazeCell cell, MazeCell otherCell, MazeDirection direction)
-    {
-        MazePassage passage = Instantiate(passagePrefab) as MazePassage;
-        passage.Initialize(cell, otherCell, direction);
-        passage = Instantiate(passagePrefab) as MazePassage;
-        passage.Initialize(otherCell, cell, direction.GetOpposite());
-        if(cell.room != otherCell.room)
-        {
-            MazeRoom roomToAssimilate = otherCell.room;
-            cell.room.Assimilate(roomToAssimilate);
-            rooms.Remove(roomToAssimilate);
-            Destroy(roomToAssimilate);
-        }
     }
 
     private void DoNextGenerationStep(List<MazeCell> activeCells)
@@ -103,7 +103,9 @@ public class Maze : MonoBehaviour {
             CreateWall(currentCell, null, direction);
         }
     }
+    #endregion
 
+    #region Cell Creation
     private MazeCell CreateCell(IntVector2 coordinates)
     {
         MazeCell prefab = Random.value < deskProbability ? deskPrefab : cellPrefab;
@@ -126,6 +128,7 @@ public class Maze : MonoBehaviour {
         if(passage is MazeDoor)
         {
             otherCell.Initialize(CreateRoom(cell.room.settingsIndex));
+            doors.Add(otherCell);
         }
         else
         {
@@ -158,6 +161,23 @@ public class Maze : MonoBehaviour {
         return newRoom;
     }
 
+    private void CreatePassageInSameRoom(MazeCell cell, MazeCell otherCell, MazeDirection direction)
+    {
+        MazePassage passage = Instantiate(passagePrefab) as MazePassage;
+        passage.Initialize(cell, otherCell, direction);
+        passage = Instantiate(passagePrefab) as MazePassage;
+        passage.Initialize(otherCell, cell, direction.GetOpposite());
+        if (cell.room != otherCell.room)
+        {
+            MazeRoom roomToAssimilate = otherCell.room;
+            cell.room.Assimilate(roomToAssimilate);
+            rooms.Remove(roomToAssimilate);
+            Destroy(roomToAssimilate);
+        }
+    }
+    #endregion
+
+    //Should ignore desks and other interactable objects
     public IntVector2 RandomCoordinates
     {
         get
