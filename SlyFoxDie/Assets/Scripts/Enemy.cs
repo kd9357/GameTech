@@ -4,26 +4,63 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
+    public float Speed = 3f;
     public Material pathMaterial;
 
     //TODO: In game manager handle instantiation and destruction of enemy prefab instance
-    private MazeCell start;
-    private MazeCell end;
     private List<MazeCell> patrolPath;
     private List<MazeCell> investigationPath;
+    private List<MazeCell> doors;
 
     private MazeCell currentCell;
+    private int patrolIndex;
+    private bool isMoving;
 
 	// Use this for initialization
 	void Start () {
-        patrolPath = PathFinding(start, end);
-        SetPatrolPathColor(Color.red);
+        patrolIndex = 1;
+        isMoving = false;
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
+        if (!isMoving)
+        {
+            if (patrolIndex >= patrolPath.Count - 1)
+                patrolIndex = 0;
+            StartCoroutine(Move());
+            patrolIndex++;
+        }
 	}
+
+    public IEnumerator Move()
+    {
+        isMoving = true;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = patrolPath[patrolIndex].transform.localPosition;
+        float t = 0;
+        while(t < 1f)
+        {
+            t += Time.deltaTime * Speed;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            yield return null;
+        }
+        isMoving = false;
+        currentCell = patrolPath[patrolIndex];
+        yield return 0;
+    }
+
+    public void Activate(MazeCell start, List<MazeCell> doors)
+    {
+        currentCell = start;
+        transform.localPosition = currentCell.transform.localPosition + Vector3.up / 2;
+
+        this.doors = doors;
+        this.doors.Sort((a, b) => GameManager.Instance.GetManhattanDistance(start, a).CompareTo(GameManager.Instance.GetManhattanDistance(start, b)));
+
+        PathToPatrol(currentCell);
+
+    }
 
     public void SetStartLocation(MazeCell cell)
     {
@@ -31,17 +68,12 @@ public class Enemy : MonoBehaviour {
         {
             currentCell.OnPlayerExited();
         }
-        start = cell;
         currentCell = cell;
         transform.localPosition = cell.transform.localPosition + Vector3.up / 2;
         //currentCell.OnPlayerEntered();
     }
 
-    public void SetEndLocation(MazeCell cell)
-    {
-        end = cell;
-    }
-
+    #region Pathing
     struct PathInfo
     {
         public MazeCell cell;
@@ -56,7 +88,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    public List<MazeCell> PathFinding(MazeCell initial, MazeCell destination)
+    private List<MazeCell> PathFinding(MazeCell initial, MazeCell destination)
     {
         List<PathInfo> fringe = new List<PathInfo>();
         Dictionary<MazeCell, int> visited = new Dictionary<MazeCell, int>();
@@ -91,7 +123,7 @@ public class Enemy : MonoBehaviour {
                 if (!(edge is MazePassage))
                     continue;
                 int g = node.cost + successor.cost; //TODO: change to + successor.cost if we want to have enemy avoid areas
-                int h = GetManhattanDistance(successor, destination);
+                int h = GameManager.Instance.GetManhattanDistance(successor, destination);
                 int f = g + h;
                 if(!visited.ContainsKey(successor) || visited[successor] > g)
                 {
@@ -106,12 +138,34 @@ public class Enemy : MonoBehaviour {
         return possiblePath;
     }
 
-    public void PathToInvestigate(MazeCell destination)
-    {
-        investigationPath = PathFinding(start, destination);
-        SetInvestigationPathColor(Color.grey);
+    // Creates a single long patrol path that connects each door and loops back to start
+    void PathToPatrol(MazeCell initial)
+    { 
+        patrolPath = PathFinding(initial, doors[0]);
+        List<MazeCell> newPath;
+        for (int i = 1; i < doors.Count; i++)
+        {
+            newPath = PathFinding(doors[i - 1], doors[i]);
+            for(int j = 1; j < newPath.Count; j++)
+            {
+                patrolPath.Add(newPath[j]);
+            }
+        }
+        newPath = PathFinding(doors[doors.Count - 1], initial);
+        for(int i = 1; i < newPath.Count - 1; i++)
+        {
+            patrolPath.Add(newPath[i]);
+        }
+        SetPatrolPathColor(Color.red);
     }
 
+    public void PathToInvestigate(MazeCell destination)
+    {
+        investigationPath = PathFinding(currentCell, destination);
+        SetInvestigationPathColor(Color.grey);
+    }
+    
+    //Debugging methods
     void SetPatrolPathColor(Color c)
     {
         foreach(MazeCell cell in patrolPath)
@@ -150,8 +204,5 @@ public class Enemy : MonoBehaviour {
         investigationPath.Clear();
     }
 
-    int GetManhattanDistance(MazeCell a, MazeCell b)
-    {
-        return Mathf.Abs(a.coordinates.x - b.coordinates.x) + Mathf.Abs(a.coordinates.z - b.coordinates.z);
-    }
+    #endregion
 }

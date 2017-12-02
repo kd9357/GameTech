@@ -59,10 +59,8 @@ public class GameManager : MonoBehaviour {
         //Instantiate Enemy
         enemyInstance = Instantiate(enemyPrefab) as Enemy;
         List<MazeCell> doors = mazeInstance.GetDoorCells();
-        MazeCell start = doors[0];
-        enemyInstance.SetStartLocation(start);
-        MazeCell end = doors[doors.Count - 1];
-        enemyInstance.SetEndLocation(end);
+        MazeCell start = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
+        enemyInstance.Activate(start, doors);
 
         ////Instantiate Player
         //playerInstance = Instantiate(playerPrefab) as Player;
@@ -103,5 +101,10 @@ public class GameManager : MonoBehaviour {
     {
         //if(enemyInstance != null)
             //enemyInstance.ClearInvestigationPath();
+    }
+
+    public int GetManhattanDistance(MazeCell a, MazeCell b)
+    {
+        return Mathf.Abs(a.coordinates.x - b.coordinates.x) + Mathf.Abs(a.coordinates.z - b.coordinates.z);
     }
 }
