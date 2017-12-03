@@ -48,6 +48,11 @@ public class Maze : MonoBehaviour {
         return doors;
     }
 
+    public int GetSize()
+    {
+        return size.x * size.z;
+    }
+
     #region Generation Steps
     public IEnumerator Generate()
     {

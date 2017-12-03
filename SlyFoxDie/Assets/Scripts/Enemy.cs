@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
@@ -74,84 +75,20 @@ public class Enemy : MonoBehaviour {
     }
 
     #region Pathing
-    struct PathInfo
-    {
-        public MazeCell cell;
-        public List<MazeCell> path;
-        public int cost;
-
-        public PathInfo(MazeCell cell, List<MazeCell> path, int cost)
-        {
-            this.cell = cell;
-            this.path = path;
-            this.cost = cost;
-        }
-    }
-
-    private List<MazeCell> PathFinding(MazeCell initial, MazeCell destination)
-    {
-        List<PathInfo> fringe = new List<PathInfo>();
-        Dictionary<MazeCell, int> visited = new Dictionary<MazeCell, int>();
-
-        List<MazeCell> possiblePath = new List<MazeCell>();
-        possiblePath.Add(initial);
-        fringe.Add(new PathInfo(initial, possiblePath, 0));
-
-        while(fringe.Count > 0)
-        {
-            //Pop first value off fringe
-            PathInfo node = fringe[0];
-            for(int i = 1; i < fringe.Count; i++)
-            {
-                if (fringe[i].cost < node.cost)
-                    node = fringe[i];
-            }
-            fringe.Remove(node);
-
-            //Check if we've reached our target
-            if(node.cell == destination)
-            {
-                possiblePath = node.path;
-                possiblePath.Add(destination);
-                break;
-            }
-
-            //Iterate over cell neighbors
-            foreach(MazeCellEdge edge in node.cell.GetEdges())
-            {
-                MazeCell successor = edge.otherCell;
-                if (!(edge is MazePassage))
-                    continue;
-                int g = node.cost + successor.cost; //TODO: change to + successor.cost if we want to have enemy avoid areas
-                int h = GameManager.Instance.GetManhattanDistance(successor, destination);
-                int f = g + h;
-                if(!visited.ContainsKey(successor) || visited[successor] > g)
-                {
-                    visited[successor] = g;
-                    possiblePath = new List<MazeCell>(node.path);
-                    possiblePath.Add(successor);
-                    fringe.Add(new PathInfo(successor, possiblePath, f));
-                }
-            }
-        }
-
-        return possiblePath;
-    }
-
     // Creates a single long patrol path that connects each door and loops back to start
     void PathToPatrol(MazeCell initial)
     { 
-        patrolPath = PathFinding(initial, doors[0]);
+        patrolPath = GameManager.Instance.PathFinding(initial, doors[0]);
         List<MazeCell> newPath;
         for (int i = 1; i < doors.Count; i++)
         {
-            newPath = PathFinding(doors[i - 1], doors[i]);
+            newPath = GameManager.Instance.PathFinding(doors[i - 1], doors[i]);
             for(int j = 1; j < newPath.Count; j++)
             {
                 patrolPath.Add(newPath[j]);
             }
         }
-        newPath = PathFinding(doors[doors.Count - 1], initial);
+        newPath = GameManager.Instance.PathFinding(doors[doors.Count - 1], initial);
         for(int i = 1; i < newPath.Count - 1; i++)
         {
             patrolPath.Add(newPath[i]);
@@ -161,7 +98,7 @@ public class Enemy : MonoBehaviour {
 
     public void PathToInvestigate(MazeCell destination)
     {
-        investigationPath = PathFinding(currentCell, destination);
+        investigationPath = GameManager.Instance.PathFinding(currentCell, destination);
         SetInvestigationPathColor(Color.grey);
     }
     
