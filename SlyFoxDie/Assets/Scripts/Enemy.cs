@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
@@ -14,43 +13,18 @@ public class Enemy : MonoBehaviour {
     private List<MazeCell> doors;
 
     private MazeCell currentCell;
-    private int patrolIndex;
-    private bool isMoving;
+    public bool isMoving;
+
+    private GameObject player;
+    private FSMSystem fsm;
 
 	// Use this for initialization
 	void Start () {
-        patrolIndex = 1;
+        player = GameObject.FindGameObjectWithTag("Player");    //can do this as long as instantiated after player
         isMoving = false;
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (!isMoving)
-        {
-            if (patrolIndex >= patrolPath.Count - 1)
-                patrolIndex = 0;
-            StartCoroutine(Move());
-            patrolIndex++;
-        }
-	}
 
-    public IEnumerator Move()
-    {
-        isMoving = true;
-        Vector3 startPosition = transform.position;
-        Vector3 endPosition = patrolPath[patrolIndex].transform.localPosition;
-        float t = 0;
-        while(t < 1f)
-        {
-            t += Time.deltaTime * Speed;
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            yield return null;
-        }
-        isMoving = false;
-        currentCell = patrolPath[patrolIndex];
-        yield return 0;
-    }
-
+    //When ready, set location, generate patrol path, start FSM
     public void Activate(MazeCell start, List<MazeCell> doors)
     {
         currentCell = start;
@@ -61,21 +35,62 @@ public class Enemy : MonoBehaviour {
 
         PathToPatrol(currentCell);
 
+        MakeFSM();
     }
 
-    public void SetStartLocation(MazeCell cell)
+    private void FixedUpdate()
     {
-        if (currentCell != null)
-        {
-            currentCell.OnPlayerExited();
-        }
-        currentCell = cell;
-        transform.localPosition = cell.transform.localPosition + Vector3.up / 2;
-        //currentCell.OnPlayerEntered();
+        fsm.CurrentState.Reason(player, gameObject);
+        fsm.CurrentState.Act(player, gameObject);
     }
+
+    private void MakeFSM()
+    {
+        PatrolState patrol = new PatrolState(patrolPath);
+        //patrol.AddTransition(Transition.Clue, StateID.Investigate);
+        //Add transition to chase
+
+        InvestigateState investigate = new InvestigateState();
+        //add transition
+
+        fsm = new FSMSystem();
+        fsm.AddState(patrol);
+        //fsm.AddState(investigate);
+    }
+
+    public void SetTransition(Transition t)
+    {
+        fsm.PerformTransition(t);
+    }
+
+    #region Movement and Orientation
+    public void GoTo(MazeCell cell)
+    {
+        StartCoroutine(Move(cell));
+    }
+
+    public IEnumerator Move(MazeCell cell)
+    {
+        isMoving = true;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = cell.transform.localPosition;
+        transform.LookAt(endPosition);  //TODO: should slowly rotate
+        float t = 0;
+        while(t < 1f)
+        {
+            t += Time.deltaTime * Speed;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            yield return null;
+        }
+        isMoving = false;
+        currentCell = cell;
+        yield return 0;
+    }
+    #endregion
 
     #region Pathing
     // Creates a single long patrol path that connects each door and loops back to start
+    //TODO: May be better to build route in game rather than all at once to have more reasonable route
     void PathToPatrol(MazeCell initial)
     { 
         patrolPath = GameManager.Instance.PathFinding(initial, doors[0]);
@@ -143,3 +158,53 @@ public class Enemy : MonoBehaviour {
 
     #endregion
 }
+
+#region States
+public class PatrolState : FSMState
+{
+    private List<MazeCell> patrolPath;
+    private int currentIndex;
+    
+    public PatrolState(List<MazeCell> path)
+    {
+        patrolPath = path;
+        currentIndex = 0;
+        //stateID = StateID.Patrol;
+    }
+
+    public override void Reason(GameObject player, GameObject npc)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public override void Act(GameObject player, GameObject npc)
+    {
+        // throw new System.NotImplementedException();
+        Enemy enemyScript = npc.GetComponent<Enemy>();
+        if (enemyScript == null)
+            Debug.LogError("NPC has no enemy script!");
+
+        if (!enemyScript.isMoving)
+        {
+            if (currentIndex >= patrolPath.Count)
+                currentIndex = 0;
+            enemyScript.GoTo(patrolPath[currentIndex]);
+            currentIndex++;
+        }
+    }
+}
+
+public class InvestigateState : FSMState
+{
+    public override void Reason(GameObject player, GameObject npc)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Act(GameObject player, GameObject npc)
+    {
+        throw new System.NotImplementedException();
+    }
+}
+
+#endregion

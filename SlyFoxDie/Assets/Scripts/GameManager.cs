@@ -167,6 +167,7 @@ public class GameManager : MonoBehaviour {
                         successor
                     };
                     fringe.Add(new PathInfo(successor, possiblePath, f, h));
+                    //Update fringe if it's already in there!
                 }
             }
         }

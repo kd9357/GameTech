@@ -206,3 +206,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 3
   pathMaterial: {fileID: 2100000, guid: dff9479db552fda4599e941f4e3f0894, type: 2}
+  isMoving: 0
