@@ -55,6 +55,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 public enum Transition
 {
     NullTransition = 0, // Use this transition to represent a non-existing transition in your system
+    Clue = 1, //If there is a cell the NPC should investigate
+    AllClear = 2, //Resume normal patrol
+    Return = 3, //Returned to initial patrol position
 }
 
 /// <summary>
@@ -64,8 +67,9 @@ public enum Transition
 public enum StateID
 {
     NullStateID = 0, // Use this ID to represent a non-existing State in your system	
-    PatrolID = 1, //Move towards each door
-    InvestigateID = 2, //Move to cell
+    Patrol = 1, //Move towards each door
+    Investigate = 2, //Move to cell
+    ResumePatrol = 3, //Move back to patrol route
 }
 
 /// <summary>

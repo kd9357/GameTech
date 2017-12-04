@@ -99,10 +99,10 @@ public class FieldOfView : MonoBehaviour {
         Vector3[] vertices = new Vector3[vertexCount];
         int[] triangles = new int[(vertexCount - 2) * 3];
 
-        vertices[0] = Vector3.zero;
+        vertices[0] = Vector3.up;
         for (int i = 0; i < vertexCount - 1; i++)
         {
-            vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]) + Vector3.up / 2;
+            vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]) + Vector3.up;
             if (i < vertexCount - 2)
             {
                 triangles[i * 3] = 0;

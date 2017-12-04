@@ -102,9 +102,18 @@ public class MazeCell : MonoBehaviour {
     {
         if (GameManager.Instance.gameStarted)
         {
-            GameManager.Instance.SetDestination(this);
+            //GameManager.Instance.SetDestination(this);
             //TODO:Should probably set it to a different material, so it's easier to see on any color background
             floorRenderer.material.color = mouseOverColor;
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        if(GameManager.Instance.gameStarted)
+        {
+            GameManager.Instance.SetDestination(this);
+            floorRenderer.material.color = Color.black;
         }
     }
 
@@ -112,7 +121,7 @@ public class MazeCell : MonoBehaviour {
     {
         if (GameManager.Instance.gameStarted)
         {
-            GameManager.Instance.ClearDestination();
+            //GameManager.Instance.ClearDestination();
             floorRenderer.material.color = currentColor;
         }
     }

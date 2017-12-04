@@ -127,6 +127,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    //From https://github.com/kd9357/cs343-search (my code from AI class)
     public List<MazeCell> PathFinding(MazeCell initial, MazeCell destination)
     {
         Heap<PathInfo> fringe = new Heap<PathInfo>(mazeInstance.GetSize());
