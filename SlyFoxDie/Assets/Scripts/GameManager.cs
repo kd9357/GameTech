@@ -63,8 +63,8 @@ public class GameManager : MonoBehaviour {
         enemyInstance.Activate(start, doors);
 
         ////Instantiate Player
-        //playerInstance = Instantiate(playerPrefab) as Player;
-        //playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
+        playerInstance = Instantiate(playerPrefab) as Player;
+        playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
         //Camera.main.clearFlags = CameraClearFlags.Depth;
         //Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
 
