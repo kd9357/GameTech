@@ -206,6 +206,7 @@ MonoBehaviour:
     type: 2}
   enemyPrefab: {fileID: 114464764524289644, guid: 7eaf87ce0cc24ab43920d7624eb4349e,
     type: 2}
+  gameStarted: 0
 --- !u!4 &282665066
 Transform:
   m_ObjectHideFlags: 0

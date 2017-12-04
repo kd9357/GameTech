@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4807499416890978}
   - component: {fileID: 54764385654070268}
   - component: {fileID: 114289587084236396}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Maze Cell
   m_TagString: Cell
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 33860145801673114}
   - component: {fileID: 64132129572773460}
   - component: {fileID: 23155058288330926}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}

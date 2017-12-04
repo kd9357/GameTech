@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33717532692276056}
   - component: {fileID: 65154962886233578}
   - component: {fileID: 23942120467150960}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33435578676635404}
   - component: {fileID: 65501910823422560}
   - component: {fileID: 23419545280006866}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Light Switch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 33166792465875018}
   - component: {fileID: 65045980566877764}
   - component: {fileID: 23928552399426772}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4392153976638086}
   - component: {fileID: 114760044160331302}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Maze Door
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 33873274319686548}
   - component: {fileID: 65998062424455422}
   - component: {fileID: 23740108642638598}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4905094761405878}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Switch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 33828784826646180}
   - component: {fileID: 65511116958625172}
   - component: {fileID: 23167723957228802}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 33696529224931038}
   - component: {fileID: 65671539892380510}
   - component: {fileID: 23684312210916110}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4123957641872464}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Hinge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 33615959036154000}
   - component: {fileID: 65375759452783000}
   - component: {fileID: 23998182344229962}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 33206657664247154}
   - component: {fileID: 65923831472775330}
   - component: {fileID: 23527229398368698}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Switch Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
