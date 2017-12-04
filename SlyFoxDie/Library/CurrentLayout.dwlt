@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -40,8 +40,8 @@ MonoBehaviour:
     y: 0
     width: 284
     height: 947
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -68,8 +68,8 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 713, y: 492}
-  m_MaxSize: {x: 18008, y: 14042}
+  m_MinSize: {x: 711, y: 492}
+  m_MaxSize: {x: 18006, y: 14042}
   vertical: 0
   controlID: 10
 --- !u!114 &4
@@ -144,7 +144,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 997
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &7
 MonoBehaviour:
@@ -322,19 +322,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Prefabs/Maze Prefabs
+    - Assets/Scripts/Maze Scripts
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Prefabs/Maze Prefabs
+  - Assets/Scripts/Maze Scripts
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie
+  m_LastProjectPath: C:\Users\Kyle\Desktop\GameTech\SlyFoxDie
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 38260000
-    m_LastClickedID: 9784
-    m_ExpandedIDs: 000000002e250000be2500000a260000802600004a27000000ca9a3bffffff7f
+    m_SelectedIDs: 7e290000
+    m_LastClickedID: 10622
+    m_ExpandedIDs: 000000009e2800002029000068290000ce290000702a000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -362,7 +362,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000002e250000be2500000a260000802600004a270000
+    m_ExpandedIDs: 000000009e2800002029000068290000ce290000702a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -389,7 +389,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: 562b0000f825000026310100fe8c0100143300007a2d00002c3300002a270000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -478,9 +478,9 @@ MonoBehaviour:
     height: 926
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 88270000
+    m_SelectedIDs: 0e070000
     m_LastClickedID: 0
-    m_ExpandedIDs: d4fbffff00000000
+    m_ExpandedIDs: eec6feff1cc7feff8cc7feffb2cafeff9258ffff42f6ffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -530,14 +530,14 @@ MonoBehaviour:
     width: 1243
     height: 522
   m_SceneLighting: 1
-  lastFramingTime: 12665.910510902922
+  lastFramingTime: 745.8123457729963
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1.9550781, y: 0.6435547, z: 0.5004883}
+    m_Target: {x: 1.4726562, y: -1.828125, z: 1.3779297}
     speed: 2
-    m_Value: {x: 1.9550781, y: 0.6435547, z: 0.5004883}
+    m_Value: {x: 1.4726562, y: -1.828125, z: 1.3779297}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -560,13 +560,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.11878845, y: 0.5693998, z: -0.0836719, w: 0.8091486}
+    m_Target: {x: 0.12905063, y: 0.67075515, z: -0.12024395, w: 0.72043324}
     speed: 2
-    m_Value: {x: 0.11878553, y: 0.56938577, z: -0.08366984, w: 0.80912876}
+    m_Value: {x: 0.12904745, y: 0.6707387, z: -0.120241, w: 0.72041553}
   m_Size:
-    m_Target: 36.54633
+    m_Target: 22
     speed: 2
-    m_Value: 36.54633
+    m_Value: 22
   m_Ortho:
     m_Target: 1
     speed: 2
