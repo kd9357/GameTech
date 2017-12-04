@@ -19,6 +19,11 @@ public class Player : MonoBehaviour {
         currentCell.OnPlayerEntered();
     }
 
+    public MazeCell GetLocation()
+    {
+        return currentCell;
+    }
+
     private void Move(MazeDirection direction)
     {
         MazeCellEdge edge = currentCell.GetEdge(direction);

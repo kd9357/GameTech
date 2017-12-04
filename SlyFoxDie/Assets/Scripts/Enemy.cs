@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour {
 
     public float Speed = 3f;
     public Material pathMaterial;
+    public GameObject player;
 
     //TODO: In game manager handle instantiation and destruction of enemy prefab instance
     private List<MazeCell> patrolPath;
@@ -17,10 +18,14 @@ public class Enemy : MonoBehaviour {
     private int patrolIndex;
     private bool isMoving;
 
+    private MazeRoom room;
+    private bool isHidden;
+
 	// Use this for initialization
 	void Start () {
         patrolIndex = 1;
         isMoving = false;
+        player = GameObject.FindWithTag("Player");
     }
 	
 	// Update is called once per frame
@@ -31,6 +36,14 @@ public class Enemy : MonoBehaviour {
                 patrolIndex = 0;
             StartCoroutine(Move());
             patrolIndex++;
+        }
+        if(isHidden)
+        {
+            Hide();
+        }
+        else
+        {
+            Show();
         }
 	}
 
@@ -48,12 +61,22 @@ public class Enemy : MonoBehaviour {
         }
         isMoving = false;
         currentCell = patrolPath[patrolIndex];
+        room = currentCell.room;
+        if(room != player.GetComponent<Player>().GetLocation().room)
+        {
+            isHidden = true;
+        }
+        else
+        {
+            isHidden = false;
+        }
         yield return 0;
     }
 
     public void Activate(MazeCell start, List<MazeCell> doors)
     {
         currentCell = start;
+        room = start.room;
         transform.localPosition = currentCell.transform.localPosition + Vector3.up / 2;
 
         this.doors = doors;
@@ -72,6 +95,18 @@ public class Enemy : MonoBehaviour {
         currentCell = cell;
         transform.localPosition = cell.transform.localPosition + Vector3.up / 2;
         //currentCell.OnPlayerEntered();
+    }
+
+    public void Hide()
+    {
+        gameObject.GetComponent<Renderer>().enabled = false;
+        transform.GetChild(0).GetComponent<Renderer>().enabled = false;
+    }
+
+    public void Show()
+    {
+        gameObject.GetComponent<Renderer>().enabled = true;
+        transform.GetChild(0).GetComponent<Renderer>().enabled = true;
     }
 
     #region Pathing
