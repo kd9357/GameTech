@@ -15,6 +15,8 @@ public class Maze : MonoBehaviour {
 
     public MazeWall wallPrefab;
 
+    public MazeWall safePrefab;
+
     public MazeDoor doorPrefab;
 
     public MazeCell deskPrefab;
@@ -36,6 +38,10 @@ public class Maze : MonoBehaviour {
     private List<MazeCell> doors = new List<MazeCell>();
     //private List<MazeCell> obstacles = new List<MazeCell>();
 
+    private bool hasSafe = false;
+
+    private MazeCell safeCell;
+
     #endregion
 
     public MazeCell GetCell (IntVector2 coordinates)
@@ -51,6 +57,11 @@ public class Maze : MonoBehaviour {
     public int GetSize()
     {
         return size.x * size.z;
+    }
+
+    public MazeCell GetSafeCell()
+    {
+        return safeCell;
     }
 
     #region Generation Steps
@@ -104,7 +115,16 @@ public class Maze : MonoBehaviour {
             }
             else
             {
-                CreateWall(currentCell, neighbor, direction);
+                if(!hasSafe)
+                {
+                    CreateSafe(currentCell, neighbor, direction);
+                    hasSafe = true;
+                    safeCell = currentCell;
+                }
+                else
+                {
+                    CreateWall(currentCell, neighbor, direction);
+                }
             }
         }
         else
@@ -149,6 +169,17 @@ public class Maze : MonoBehaviour {
     private void CreateWall (MazeCell cell, MazeCell otherCell, MazeDirection direction)
     {
         MazeWall wall = Instantiate(wallPrefab) as MazeWall;
+        wall.Initialize(cell, otherCell, direction);
+        if (otherCell != null)
+        {
+            wall = Instantiate(wallPrefab) as MazeWall;
+            wall.Initialize(otherCell, cell, direction.GetOpposite());
+        }
+    }
+
+    private void CreateSafe(MazeCell cell, MazeCell otherCell, MazeDirection direction)
+    {
+        MazeWall wall = Instantiate(safePrefab) as MazeWall;
         wall.Initialize(cell, otherCell, direction);
         if (otherCell != null)
         {
