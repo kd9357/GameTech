@@ -208,7 +208,6 @@ public class GameManager : MonoBehaviour {
         //playerInstance.SetDestination();
         if (enemyInstance != null)
         {
-            enemyInstance.ClearInvestigationPath();
             enemyInstance.PathToInvestigate(cell);
         }
     }

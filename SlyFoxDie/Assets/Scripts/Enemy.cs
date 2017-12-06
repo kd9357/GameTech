@@ -7,21 +7,23 @@ public class Enemy : MonoBehaviour
 
     public float Speed = 3f;
     public Material pathMaterial;
-    public GameObject player;
 
-    [HideInInspector]
-    public List<MazeCell> investigationPath;
+    //[HideInInspector]
+    //public List<MazeCell> investigationPath;
 
     private List<MazeCell> patrolPath;
     private List<MazeCell> doors;
 
     private MazeCell currentCell;
+    private MazeCell investigateCell;
+    private MazeCell cachedCell;
+
     public bool isMoving;
     public bool isInvestigating;
-    //public MazeCell cellToInvestigate;
+    public bool isPatrolling;
+    public bool pathChanged;
 
-    //private GameObject player;
-    private GameObject other;
+    private GameObject player;
     private FSMSystem fsm;
 
     private MazeRoom room;
@@ -31,6 +33,9 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         isMoving = false;
+        isPatrolling = true;
+        isInvestigating = false;
+        pathChanged = false;
         player = GameObject.FindWithTag("Player");//can do this as long as instantiated after player
     }
 
@@ -64,8 +69,8 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        fsm.CurrentState.Reason(other, gameObject);
-        fsm.CurrentState.Act(other, gameObject);
+        fsm.CurrentState.Reason(player, gameObject);
+        fsm.CurrentState.Act(player, gameObject);
     }
 
     private void MakeFSM()
@@ -81,6 +86,7 @@ public class Enemy : MonoBehaviour
 
         ResumePatrolState resume = new ResumePatrolState(this);
         resume.AddTransition(Transition.Return, StateID.Patrol);
+        resume.AddTransition(Transition.Clue, StateID.Investigate);
 
         fsm = new FSMSystem();
         fsm.AddState(patrol);
@@ -96,6 +102,15 @@ public class Enemy : MonoBehaviour
     public MazeCell GetCurrentCell()
     {
         return currentCell;
+    }
+
+    public MazeCell GetInvestigateCell()
+    {
+        return investigateCell;
+    }
+    public MazeCell GetCachedCell()
+    {
+        return cachedCell;
     }
 
     #region Movement and Orientation
@@ -132,6 +147,7 @@ public class Enemy : MonoBehaviour
     }
     #endregion
 
+    #region Rendering
     public void Hide()
     {
         foreach (Renderer r in gameObject.GetComponentsInChildren<Renderer>())
@@ -143,10 +159,12 @@ public class Enemy : MonoBehaviour
         foreach (Renderer r in gameObject.GetComponentsInChildren<Renderer>())
             r.enabled = true;
     }
+    #endregion
 
     #region Pathing
     // Creates a single long patrol path that connects each door and loops back to start
     //TODO: May be better to build route in game rather than all at once to have more reasonable route
+    //TODO: May not need patrol route list on enemy, just let FSM handle it
     void PathToPatrol(MazeCell initial)
     {
         patrolPath = GameManager.Instance.PathFinding(initial, doors[0]);
@@ -167,13 +185,17 @@ public class Enemy : MonoBehaviour
         SetPatrolPathColor(Color.red);
     }
 
-    //TODO: figure out how to switch with FSM
     public void PathToInvestigate(MazeCell destination)
     {
-        investigationPath = GameManager.Instance.PathFinding(currentCell, destination);
-        //SetInvestigationPathColor(Color.grey);
-        //cellToInvestigate = destination;
-        isInvestigating = true;
+        if (isInvestigating)
+            pathChanged = true;
+        if(isPatrolling)
+        {
+            isInvestigating = true;
+            isPatrolling = false;
+            cachedCell = currentCell;
+        }
+        investigateCell = destination;
     }
 
     //Debugging methods
@@ -187,14 +209,6 @@ public class Enemy : MonoBehaviour
         patrolPath[patrolPath.Count - 1].SetMaterialColor(Color.black);
     }
 
-    void SetInvestigationPathColor(Color c)
-    {
-        foreach (MazeCell cell in investigationPath)
-        {
-            cell.SetMaterialColor(c);
-        }
-    }
-
     public void ClearPatrolPath()
     {
         foreach (MazeCell cell in patrolPath)
@@ -204,21 +218,20 @@ public class Enemy : MonoBehaviour
         patrolPath.Clear();
     }
 
-    public void ClearInvestigationPath()
-    {
-        if (investigationPath == null)
-            return;
-        //foreach(MazeCell cell in investigationPath)
-        //{
-        //    cell.ResetMaterialColor();
-        //}
-        investigationPath.Clear();
-    }
-
     #endregion
 }
 
 #region States
+
+/*States to add:
+ * 
+ * Look at target state: when first investigate, pause for some seconds before going to investigate
+ * Look around state: when reached cell to investigate, pause and look around for some seconds before going back to patrol
+ * Chase: When player is seen, transition to this state (either game over or chase after player)
+ * 
+ */
+
+//The enemy will walk towards the doors around its spawn point
 public class PatrolState : FSMState
 {
     private List<MazeCell> patrolPath;
@@ -235,9 +248,12 @@ public class PatrolState : FSMState
 
     public override void Reason(GameObject player, GameObject npc)
     {
-        if (enemy.isInvestigating)
+        if (!enemy.isMoving)
         {
-            enemy.SetTransition(Transition.Clue);
+            if (enemy.isInvestigating)
+            {
+                enemy.SetTransition(Transition.Clue);
+            }
         }
     }
 
@@ -251,12 +267,20 @@ public class PatrolState : FSMState
             currentIndex++;
         }
     }
+
+    public override void DoBeforeEntering()
+    {
+        enemy.isInvestigating = false;
+        enemy.isPatrolling = true;
+    }
 }
 
+//The enemy will walk towards a specified cell
 public class InvestigateState : FSMState
 {
     private int currentIndex;
     private Enemy enemy;
+    private List<MazeCell> path;
 
     public InvestigateState(Enemy enemy)
     {
@@ -267,12 +291,18 @@ public class InvestigateState : FSMState
 
     public override void Reason(GameObject player, GameObject npc)
     {
-        if (currentIndex >= enemy.investigationPath.Count)
+        if (!enemy.isMoving)
         {
-            //enemy.investigationPath = null;
-            enemy.investigationPath.Reverse();
-            currentIndex = 0;
-            enemy.SetTransition(Transition.AllClear);
+            if (enemy.pathChanged)
+            {
+                enemy.pathChanged = false;
+                path = GameManager.Instance.PathFinding(enemy.GetCurrentCell(), enemy.GetInvestigateCell());
+                currentIndex = 0;
+            }
+            else if(currentIndex >= path.Count)
+            {
+                enemy.SetTransition(Transition.AllClear);
+            }
         }
     }
 
@@ -280,17 +310,27 @@ public class InvestigateState : FSMState
     {
         if (!enemy.isMoving)
         {
-            //TODO: figure out why array out of index
-            enemy.GoTo(enemy.investigationPath[currentIndex]);
+            enemy.GoTo(path[currentIndex]);
             currentIndex++;
         }
     }
+
+    public override void DoBeforeEntering()
+    {
+        enemy.isInvestigating = true;
+        enemy.isPatrolling = false;
+        currentIndex = 0;
+        path = GameManager.Instance.PathFinding(enemy.GetCurrentCell(), enemy.GetInvestigateCell());
+    }
+
 }
 
+//The enemy will return to its patrol route cell it left in investigate
 public class ResumePatrolState : FSMState
 {
     private int currentIndex;
     private Enemy enemy;
+    private List<MazeCell> path;
 
     public ResumePatrolState(Enemy enemy)
     {
@@ -301,11 +341,17 @@ public class ResumePatrolState : FSMState
 
     public override void Reason(GameObject player, GameObject npc)
     {
-        if (currentIndex >= enemy.investigationPath.Count)
+        if (!enemy.isMoving)
         {
-            enemy.investigationPath.Clear();
-            currentIndex = 0;
-            enemy.SetTransition(Transition.Return);
+            if (enemy.pathChanged)
+            {
+                //Go to investigate
+                enemy.SetTransition(Transition.Clue);
+            }
+            else if(currentIndex >= path.Count)
+            {
+                enemy.SetTransition(Transition.Return);
+            }
         }
     }
 
@@ -313,10 +359,21 @@ public class ResumePatrolState : FSMState
     {
         if (!enemy.isMoving)
         {
-            //TODO: figure out why array out of index
-            enemy.GoTo(enemy.investigationPath[currentIndex]);
+            enemy.GoTo(path[currentIndex]);
             currentIndex++;
         }
+    }
+
+    public override void DoBeforeEntering()
+    {
+        path = GameManager.Instance.PathFinding(enemy.GetCurrentCell(), enemy.GetCachedCell());
+        currentIndex = 0;
+    }
+
+    public override void DoBeforeLeaving()
+    {
+        enemy.isInvestigating = false;
+        enemy.isPatrolling = true;
     }
 }
 
