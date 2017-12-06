@@ -62,9 +62,31 @@ public class GameManager : MonoBehaviour {
         MazeCell start = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
         enemyInstance.Activate(start, doors);
 
-        ////Instantiate Player
+        //Instantiate Player
         playerInstance = Instantiate(playerPrefab) as Player;
-        playerInstance.SetLocation(mazeInstance.GetCell(mazeInstance.RandomCoordinates));
+        IntVector2 coord = new IntVector2(0, 0);
+        MazeCell currentCell = mazeInstance.GetCell(coord);
+        MazeCell safeCell = mazeInstance.GetSafeCell();
+        MazeCell bestCell = currentCell;
+        int maxDistance = 0;
+        int sizeX = mazeInstance.size.x;
+        int sizeZ = mazeInstance.size.z;
+        for(int i = 0; i < sizeX; ++i)
+        {
+            coord.x = i;
+            for(int j = 0; j < sizeZ; ++j)
+            {
+                coord.z = j;
+                currentCell = mazeInstance.GetCell(coord);
+                int distance = GetManhattanDistance(currentCell, safeCell);
+                if(distance > maxDistance)
+                {
+                    maxDistance = distance;
+                    bestCell = currentCell;
+                }
+            }
+        }
+        playerInstance.SetLocation(bestCell);
         //Camera.main.clearFlags = CameraClearFlags.Depth;
         //Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
 
@@ -127,6 +149,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    //From https://github.com/kd9357/cs343-search (my code from AI class)
     public List<MazeCell> PathFinding(MazeCell initial, MazeCell destination)
     {
         Heap<PathInfo> fringe = new Heap<PathInfo>(mazeInstance.GetSize());
@@ -167,6 +190,7 @@ public class GameManager : MonoBehaviour {
                         successor
                     };
                     fringe.Add(new PathInfo(successor, possiblePath, f, h));
+                    //Update fringe if it's already in there!
                 }
             }
         }
@@ -184,7 +208,6 @@ public class GameManager : MonoBehaviour {
         //playerInstance.SetDestination();
         if (enemyInstance != null)
         {
-            enemyInstance.ClearInvestigationPath();
             enemyInstance.PathToInvestigate(cell);
         }
     }

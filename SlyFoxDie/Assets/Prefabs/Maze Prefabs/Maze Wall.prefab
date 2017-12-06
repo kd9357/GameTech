@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4335163462131802}
   - component: {fileID: 114091539878937374}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Maze Wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 33154996356913700}
   - component: {fileID: 65021141405466602}
   - component: {fileID: 23842037494332698}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: dac6f1b6144ca3449934d47153911c75, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

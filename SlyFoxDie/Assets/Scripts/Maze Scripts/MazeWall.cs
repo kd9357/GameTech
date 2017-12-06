@@ -9,6 +9,9 @@ public class MazeWall : MazeCellEdge {
     public override void Initialize(MazeCell cell, MazeCell otherCell, MazeDirection direction)
     {
         base.Initialize(cell, otherCell, direction);
-        wall.GetComponent<Renderer>().material = cell.room.settings.wallMaterial;
+        if(gameObject.tag != "Safe")
+        {
+            wall.GetComponent<Renderer>().material = cell.room.settings.wallMaterial;
+        }
     }
 }
