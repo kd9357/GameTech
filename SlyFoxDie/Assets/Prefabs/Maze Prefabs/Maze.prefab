@@ -65,7 +65,7 @@ MonoBehaviour:
     type: 2}
   doorPrefab: {fileID: 114760044160331302, guid: ddd2858d08f2e45f3b4b479b51caf822,
     type: 2}
-  deskPrefab: {fileID: 114842253795360524, guid: bdda660b0463d134ab4871bafad3ba33,
+  deskPrefab: {fileID: 114899889204478722, guid: bdda660b0463d134ab4871bafad3ba33,
     type: 2}
   roomSettings:
   - floorMaterial: {fileID: 2100000, guid: 5f1601a1ff3ee154c863425bdadc86dc, type: 2}
