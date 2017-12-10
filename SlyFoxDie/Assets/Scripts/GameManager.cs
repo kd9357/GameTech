@@ -56,18 +56,12 @@ public class GameManager : MonoBehaviour {
         mazeInstance = Instantiate(mazePrefab) as Maze;
         yield return StartCoroutine(mazeInstance.Generate());
 
-        //Instantiate Enemy
-        enemyInstance = Instantiate(enemyPrefab) as Enemy;
-        List<MazeCell> doors = mazeInstance.GetDoorCells();
-        MazeCell start = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
-        enemyInstance.Activate(start, doors);
-
         //Instantiate Player
         playerInstance = Instantiate(playerPrefab) as Player;
         IntVector2 coord = new IntVector2(0, 0);
         MazeCell currentCell = mazeInstance.GetCell(coord);
         MazeCell safeCell = mazeInstance.GetSafeCell();
-        MazeCell bestCell = currentCell;
+        MazeCell playerCell = currentCell;
         int maxDistance = 0;
         int sizeX = mazeInstance.size.x;
         int sizeZ = mazeInstance.size.z;
@@ -82,13 +76,38 @@ public class GameManager : MonoBehaviour {
                 if(distance > maxDistance)
                 {
                     maxDistance = distance;
-                    bestCell = currentCell;
+                    playerCell = currentCell;
                 }
             }
         }
-        playerInstance.SetLocation(bestCell);
-        //Camera.main.clearFlags = CameraClearFlags.Depth;
-        //Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
+        playerInstance.SetLocation(playerCell);
+
+        //Instantiate Enemy
+        enemyInstance = Instantiate(enemyPrefab) as Enemy;
+        List<MazeCell> doors = mazeInstance.GetDoorCells();
+        //MazeCell start = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
+        coord = new IntVector2(0, 0);
+        currentCell = mazeInstance.GetCell(coord);
+        MazeCell enemyCell = currentCell;
+        maxDistance = 0;
+        sizeX = mazeInstance.size.x;
+        sizeZ = mazeInstance.size.z;
+        for (int i = 0; i < sizeX; ++i)
+        {
+            coord.x = i;
+            for (int j = 0; j < sizeZ; ++j)
+            {
+                coord.z = j;
+                currentCell = mazeInstance.GetCell(coord);
+                int distance = GetManhattanDistance(currentCell, playerCell);
+                if (distance > maxDistance)
+                {
+                    maxDistance = distance;
+                    enemyCell = currentCell;
+                }
+            }
+        }
+        enemyInstance.Activate(enemyCell, doors);
 
         gameStarted = true;
     }
