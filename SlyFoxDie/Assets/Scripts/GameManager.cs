@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
 
     public Text stateText;
     public Text resetText;
+    public Text treasureText;
     #endregion
 
     #region Private parameters
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour {
     {
         stateText.text = "";
         resetText.text = "";
+        treasureText.text = "";
         StartCoroutine(BeginGame());
     }
 
@@ -112,6 +114,7 @@ public class GameManager : MonoBehaviour {
         }
         playerInstance.Activate(playerCell);
         playerCell.SetMaterialColor(Color.blue);
+        playerInstance.treasureText = treasureText;
 
         //Instantiate Enemy
         enemyInstance = Instantiate(enemyPrefab) as Enemy;
@@ -148,6 +151,7 @@ public class GameManager : MonoBehaviour {
         gameOver = false;
         stateText.text = "";
         resetText.text = "";
+        treasureText.text = "";
         StopAllCoroutines();
         Destroy(mazeInstance.gameObject);
         if (playerInstance != null)

@@ -37,7 +37,6 @@ public class FieldOfView : MonoBehaviour {
     {
         if (endGame)
         {
-            print("endGame: " + endGame);
             GameManager.Instance.GameOver(false);
             endGame = false;
         }

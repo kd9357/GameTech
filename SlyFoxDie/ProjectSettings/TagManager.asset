@@ -8,6 +8,7 @@ TagManager:
   - Cell
   - Door
   - Wall
+  - Safe
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - UI
   - 
   - 
-  - Player
   - Enemy
+  - Player
   - Wall
   - Ground
   - 

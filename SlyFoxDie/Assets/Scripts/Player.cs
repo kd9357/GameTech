@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class Player : MonoBehaviour {
     private bool hasTreasure = false;
 
     private bool canMove = true;
+
+    public Text treasureText;
 
     public void SetLocation(MazeCell cell)
     {
@@ -35,7 +38,7 @@ public class Player : MonoBehaviour {
                 if (e.tag == "Safe")
                 {
                     hasTreasure = true;
-                    print("found treasure");
+                    treasureText.text = "You have the treasure! Find your way back!";
                 }
             }
         }
