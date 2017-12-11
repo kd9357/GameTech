@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -13,6 +14,10 @@ public class GameManager : MonoBehaviour {
     public Enemy enemyPrefab;
 
     public bool gameStarted;
+    public bool gameOver;
+
+    public Text stateText;
+    public Text resetText;
     #endregion
 
     #region Private parameters
@@ -20,6 +25,7 @@ public class GameManager : MonoBehaviour {
     private Player playerInstance;
 
     private Enemy enemyInstance;
+    bool gameWon = false;
     #endregion
 
     //Singleton instantiation
@@ -31,21 +37,45 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
         gameStarted = false;
+        gameOver = false;
     }
 
     // Use this for initialization
     void Start()
     {
+        stateText.text = "";
+        resetText.text = "";
         StartCoroutine(BeginGame());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(gameOver)
         {
-            RestartGame();
+            playerInstance.disableMovement();
+            enemyInstance.disableMovement();
+            if (gameWon)
+            {
+                stateText.text = "You found the treasure!";
+            }
+            else
+            {
+                stateText.text = "You were caught!";
+            }
+            resetText.text = "Press Space to play again";
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                RestartGame();
+            }
         }
+    }
+
+    public void GameOver(bool won)
+    {
+        gameOver = true;
+        gameWon = won;
     }
 
     private IEnumerator BeginGame()
@@ -80,12 +110,12 @@ public class GameManager : MonoBehaviour {
                 }
             }
         }
-        playerInstance.SetLocation(playerCell);
+        playerInstance.Activate(playerCell);
+        playerCell.SetMaterialColor(Color.blue);
 
         //Instantiate Enemy
         enemyInstance = Instantiate(enemyPrefab) as Enemy;
         List<MazeCell> doors = mazeInstance.GetDoorCells();
-        //MazeCell start = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
         coord = new IntVector2(0, 0);
         currentCell = mazeInstance.GetCell(coord);
         MazeCell enemyCell = currentCell;
@@ -115,6 +145,9 @@ public class GameManager : MonoBehaviour {
     private void RestartGame()
     {
         gameStarted = false;
+        gameOver = false;
+        stateText.text = "";
+        resetText.text = "";
         StopAllCoroutines();
         Destroy(mazeInstance.gameObject);
         if (playerInstance != null)

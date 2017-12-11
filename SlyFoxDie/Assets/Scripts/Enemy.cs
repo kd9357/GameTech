@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour
 
     private MazeRoom room;
     private bool isHidden;
+    private bool canMove = true;
 
     // Use this for initialization
     void Start()
@@ -67,10 +68,18 @@ public class Enemy : MonoBehaviour
         MakeFSM();
     }
 
+    public void disableMovement()
+    {
+        canMove = false;
+    }
+
     private void FixedUpdate()
     {
-        fsm.CurrentState.Reason(player, gameObject);
-        fsm.CurrentState.Act(player, gameObject);
+        if (canMove)
+        {
+            fsm.CurrentState.Reason(player, gameObject);
+            fsm.CurrentState.Act(player, gameObject);
+        }
     }
 
     private void MakeFSM()

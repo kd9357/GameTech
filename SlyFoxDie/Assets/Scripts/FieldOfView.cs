@@ -23,12 +23,24 @@ public class FieldOfView : MonoBehaviour {
 
     private Mesh viewMesh;
 
+    private bool endGame = false;
+
     private void Start()
     {
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
-        StartCoroutine("FindTargetsWithDelay", 0.2f);
+        StartCoroutine("FindTargetsWithDelay", 0.1f);
+    }
+
+    private void Update()
+    {
+        if (endGame)
+        {
+            print("endGame: " + endGame);
+            GameManager.Instance.GameOver(false);
+            endGame = false;
+        }
     }
 
     private void LateUpdate()
@@ -60,6 +72,7 @@ public class FieldOfView : MonoBehaviour {
                 {
                     //Target seen
                     visibleTargets.Add(target);
+                    endGame = true;
                 }
             }
         }

@@ -8,6 +8,12 @@ public class Player : MonoBehaviour {
 
     private MazeDirection currentDirection;
 
+    private MazeCell origin;
+
+    private bool hasTreasure = false;
+
+    private bool canMove = true;
+
     public void SetLocation(MazeCell cell)
     {
         if(currentCell != null)
@@ -17,6 +23,33 @@ public class Player : MonoBehaviour {
         currentCell = cell;
         transform.localPosition = cell.transform.localPosition;
         currentCell.OnPlayerEntered();
+        if (cell == origin && hasTreasure)
+        {
+            GameManager.Instance.GameOver(true);
+        }
+        else
+        {
+            MazeCellEdge[] edges = currentCell.GetEdges();
+            foreach (MazeCellEdge e in edges)
+            {
+                if (e.tag == "Safe")
+                {
+                    hasTreasure = true;
+                    print("found treasure");
+                }
+            }
+        }
+    }
+
+    public void Activate(MazeCell cell)
+    {
+        SetLocation(cell);
+        origin = cell;
+    }
+
+    public void disableMovement()
+    {
+        canMove = false;
     }
 
     public MazeCell GetLocation()
@@ -45,29 +78,32 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        if (canMove)
         {
-            Move(currentDirection);
-        }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            Move(currentDirection.GetNextClockwise());
-        }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            Move(currentDirection.GetOpposite());
-        }
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            Move(currentDirection.GetNextCounterclockwise());
-        }
-        else if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Rotate(currentDirection.GetNextCounterclockwise());
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            Rotate(currentDirection.GetNextClockwise());
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                Move(currentDirection);
+            }
+            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                Move(currentDirection.GetNextClockwise());
+            }
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                Move(currentDirection.GetOpposite());
+            }
+            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                Move(currentDirection.GetNextCounterclockwise());
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                Rotate(currentDirection.GetNextCounterclockwise());
+            }
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                Rotate(currentDirection.GetNextClockwise());
+            }
         }
     }
 }

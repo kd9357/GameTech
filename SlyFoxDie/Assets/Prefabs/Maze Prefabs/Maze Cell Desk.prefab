@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33178806661311112}
   - component: {fileID: 65786013693344318}
   - component: {fileID: 23829541526314092}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Leg1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33100676473947034}
   - component: {fileID: 65502275158004608}
   - component: {fileID: 23559518934233320}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Leg4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 4117890312844082}
   - component: {fileID: 54101230500715682}
   - component: {fileID: 114899889204478722}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Maze Cell Desk
   m_TagString: Hide
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4111707089283826}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Desktop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 33312446934113550}
   - component: {fileID: 65414512432379346}
   - component: {fileID: 23246163882632280}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Leg3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 33905989882429900}
   - component: {fileID: 65414986469959432}
   - component: {fileID: 23769662404255744}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 33601858516536006}
   - component: {fileID: 65101398270285898}
   - component: {fileID: 23530618645379200}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Leg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 33561964512747036}
   - component: {fileID: 64388020698041180}
   - component: {fileID: 23937631038448668}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
