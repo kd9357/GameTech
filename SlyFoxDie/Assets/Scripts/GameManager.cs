@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -13,6 +14,11 @@ public class GameManager : MonoBehaviour {
     public Enemy enemyPrefab;
 
     public bool gameStarted;
+    public bool gameOver;
+
+    public Text stateText;
+    public Text resetText;
+    public Text treasureText;
     #endregion
 
     #region Private parameters
@@ -20,6 +26,7 @@ public class GameManager : MonoBehaviour {
     private Player playerInstance;
 
     private Enemy enemyInstance;
+    bool gameWon = false;
     #endregion
 
     //Singleton instantiation
@@ -31,21 +38,46 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
         gameStarted = false;
+        gameOver = false;
     }
 
     // Use this for initialization
     void Start()
     {
+        stateText.text = "";
+        resetText.text = "";
+        treasureText.text = "";
         StartCoroutine(BeginGame());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(gameOver)
         {
-            RestartGame();
+            playerInstance.disableMovement();
+            enemyInstance.disableMovement();
+            if (gameWon)
+            {
+                stateText.text = "You found the treasure!";
+            }
+            else
+            {
+                stateText.text = "You were caught!";
+            }
+            resetText.text = "Press Space to play again";
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                RestartGame();
+            }
         }
+    }
+
+    public void GameOver(bool won)
+    {
+        gameOver = true;
+        gameWon = won;
     }
 
     private IEnumerator BeginGame()
@@ -56,18 +88,12 @@ public class GameManager : MonoBehaviour {
         mazeInstance = Instantiate(mazePrefab) as Maze;
         yield return StartCoroutine(mazeInstance.Generate());
 
-        //Instantiate Enemy
-        enemyInstance = Instantiate(enemyPrefab) as Enemy;
-        List<MazeCell> doors = mazeInstance.GetDoorCells();
-        MazeCell start = mazeInstance.GetCell(mazeInstance.RandomCoordinates);
-        enemyInstance.Activate(start, doors);
-
         //Instantiate Player
         playerInstance = Instantiate(playerPrefab) as Player;
         IntVector2 coord = new IntVector2(0, 0);
         MazeCell currentCell = mazeInstance.GetCell(coord);
         MazeCell safeCell = mazeInstance.GetSafeCell();
-        MazeCell bestCell = currentCell;
+        MazeCell playerCell = currentCell;
         int maxDistance = 0;
         int sizeX = mazeInstance.size.x;
         int sizeZ = mazeInstance.size.z;
@@ -82,13 +108,39 @@ public class GameManager : MonoBehaviour {
                 if(distance > maxDistance)
                 {
                     maxDistance = distance;
-                    bestCell = currentCell;
+                    playerCell = currentCell;
                 }
             }
         }
-        playerInstance.SetLocation(bestCell);
-        //Camera.main.clearFlags = CameraClearFlags.Depth;
-        //Camera.main.rect = new Rect(0f, 0f, 0.5f, 0.5f);
+        playerInstance.Activate(playerCell);
+        playerCell.SetMaterialColor(Color.blue);
+        playerInstance.treasureText = treasureText;
+
+        //Instantiate Enemy
+        enemyInstance = Instantiate(enemyPrefab) as Enemy;
+        List<MazeCell> doors = mazeInstance.GetDoorCells();
+        coord = new IntVector2(0, 0);
+        currentCell = mazeInstance.GetCell(coord);
+        MazeCell enemyCell = currentCell;
+        maxDistance = 0;
+        sizeX = mazeInstance.size.x;
+        sizeZ = mazeInstance.size.z;
+        for (int i = 0; i < sizeX; ++i)
+        {
+            coord.x = i;
+            for (int j = 0; j < sizeZ; ++j)
+            {
+                coord.z = j;
+                currentCell = mazeInstance.GetCell(coord);
+                int distance = GetManhattanDistance(currentCell, playerCell);
+                if (distance > maxDistance)
+                {
+                    maxDistance = distance;
+                    enemyCell = currentCell;
+                }
+            }
+        }
+        enemyInstance.Activate(enemyCell, doors);
 
         gameStarted = true;
     }
@@ -96,6 +148,10 @@ public class GameManager : MonoBehaviour {
     private void RestartGame()
     {
         gameStarted = false;
+        gameOver = false;
+        stateText.text = "";
+        resetText.text = "";
+        treasureText.text = "";
         StopAllCoroutines();
         Destroy(mazeInstance.gameObject);
         if (playerInstance != null)

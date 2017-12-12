@@ -304,11 +304,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc1b25f7711aeca4eb7bb9eae63c938b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 4
+  viewRadius: 2
   viewAngle: 60
   targetMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 512
   obstacleMask:
     serializedVersion: 2
     m_Bits: 1024
@@ -330,6 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 3
   pathMaterial: {fileID: 2100000, guid: dff9479db552fda4599e941f4e3f0894, type: 2}
-  investigationPath: []
   isMoving: 0
   isInvestigating: 0
+  isPatrolling: 0
+  pathChanged: 0

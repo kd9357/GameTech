@@ -115,7 +115,7 @@ public class Maze : MonoBehaviour {
             }
             else
             {
-                if(!hasSafe)
+                if(!hasSafe && currentCell.tag != "Hide")
                 {
                     CreateSafe(currentCell, neighbor, direction);
                     hasSafe = true;
