@@ -12,10 +12,11 @@ public class Player : MonoBehaviour {
     private MazeCell origin;
 
     private bool hasTreasure = false;
-
     private bool canMove = true;
+    private bool isMoving = false;
 
     public Text treasureText;
+    public float Speed = 10f;
 
     public void SetLocation(MazeCell cell)
     {
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour {
             currentCell.OnPlayerExited();
         }
         currentCell = cell;
-        transform.localPosition = cell.transform.localPosition;
+        StartCoroutine(Move(cell));
         currentCell.OnPlayerEntered();
         if (cell == origin && hasTreasure)
         {
@@ -42,6 +43,23 @@ public class Player : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public IEnumerator Move(MazeCell cell)
+    {
+        isMoving = true;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = cell.transform.localPosition;
+        float t = 0;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * Speed;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            yield return null;
+        }
+        isMoving = false;
+        //currentCell = cell;
+        yield return 0;
     }
 
     public void Activate(MazeCell cell)
