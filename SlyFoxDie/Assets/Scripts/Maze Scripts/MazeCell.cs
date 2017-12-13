@@ -115,8 +115,16 @@ public class MazeCell : MonoBehaviour {
     {
         if(GameManager.Instance.gameStarted)
         {
-            GameManager.Instance.SetDestination(this);
-            floorRenderer.material.color = Color.black;
+            bool rockThrow = false;
+            if (GameManager.Instance.GetManhattanDistance(this, GameManager.Instance.GetPlayerCell()) <= 3)
+            {
+                floorRenderer.material.color = Color.black;
+                rockThrow = GameManager.Instance.ThrowRock();
+            }
+            if(rockThrow && GameManager.Instance.GetManhattanDistance(this, GameManager.Instance.GetEnemyCell()) <= 5)
+            {
+                GameManager.Instance.SetDestination(this);
+            }
         }
     }
 
