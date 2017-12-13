@@ -9,6 +9,7 @@ public class MazeCell : MonoBehaviour {
     [Tooltip("The cost it takes to move across this cell. Higher costs = greater avoidance")]
     public int cost = 1;
     public Color mouseOverColor;
+    public bool canHide;
 
     private Renderer floorRenderer;
     private MazeCellEdge[] edges = new MazeCellEdge[MazeDirections.Count];

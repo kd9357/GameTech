@@ -133,12 +133,15 @@ public class Enemy : MonoBehaviour
         isMoving = true;
         Vector3 startPosition = transform.position;
         Vector3 endPosition = cell.transform.localPosition;
-        transform.LookAt(endPosition);  //TODO: should slowly rotate
+        float step = Speed * Time.deltaTime;
+        Vector3 targetDir = endPosition - startPosition;
         float t = 0;
         while (t < 1f)
         {
             t += Time.deltaTime * Speed;
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, t, 0f);
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            transform.rotation = Quaternion.LookRotation(newDir);
             yield return null;
         }
         isMoving = false;
@@ -172,8 +175,6 @@ public class Enemy : MonoBehaviour
 
     #region Pathing
     // Creates a single long patrol path that connects each door and loops back to start
-    //TODO: May be better to build route in game rather than all at once to have more reasonable route
-    //TODO: May not need patrol route list on enemy, just let FSM handle it
     void PathToPatrol(MazeCell initial)
     {
         patrolPath = GameManager.Instance.PathFinding(initial, doors[0]);
@@ -191,7 +192,7 @@ public class Enemy : MonoBehaviour
         {
             patrolPath.Add(newPath[i]);
         }
-        SetPatrolPathColor(Color.red);
+        //SetPatrolPathColor(Color.red);
     }
 
     public void PathToInvestigate(MazeCell destination)
