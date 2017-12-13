@@ -27,11 +27,21 @@ public class Player : MonoBehaviour {
         currentCell = cell;
         StartCoroutine(Move(cell));
         currentCell.OnPlayerEntered();
+        if (cell.canHide)
+        {
+            foreach(Transform trans in gameObject.GetComponentsInChildren<Transform>())
+                trans.gameObject.layer = LayerMask.NameToLayer("Default");
+        }
+        else
+        {
+            foreach (Transform trans in gameObject.GetComponentsInChildren<Transform>())
+                trans.gameObject.layer = LayerMask.NameToLayer("Player");
+        }
         if (cell == origin && hasTreasure)
         {
             GameManager.Instance.GameOver(true);
         }
-        else
+        else if(!hasTreasure)
         {
             MazeCellEdge[] edges = currentCell.GetEdges();
             foreach (MazeCellEdge e in edges)
