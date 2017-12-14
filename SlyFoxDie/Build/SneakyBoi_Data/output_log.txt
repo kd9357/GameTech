@@ -1,0 +1,32 @@
+Initialize engine version: 5.6.1p3 (ede8e3f4adbd)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: AMD Radeon (TM) R9 390 Series (ID=0x67b1)
+    Vendor:   ATI
+    VRAM:     3072 MB
+    Driver:   23.20.793.1024
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+- Completed reload, in  0.098 seconds
+Platform assembly: C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Amadeus\Documents\GitHub\GameTech\SlyFoxDie\Build\SneakyBoi_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 59Hz; virtual: 3840x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.805701 ms
+Setting up 4 worker threads for Enlighten.
+  Thread -> id: 1cb8 -> priority: 1 
+  Thread -> id: 2178 -> priority: 1 
+  Thread -> id: ddc -> priority: 1 
+  Thread -> id: 32d8 -> priority: 1 
