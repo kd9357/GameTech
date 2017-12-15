@@ -78,9 +78,9 @@ public class Player : MonoBehaviour {
         origin = cell;
     }
 
-    public void disableMovement()
+    public void AllowMovement(bool b)
     {
-        canMove = false;
+        canMove = b;
     }
 
     public MazeCell GetLocation()
@@ -127,14 +127,14 @@ public class Player : MonoBehaviour {
             {
                 Move(currentDirection.GetNextCounterclockwise());
             }
-            else if (Input.GetKeyDown(KeyCode.Q))
-            {
-                Rotate(currentDirection.GetNextCounterclockwise());
-            }
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                Rotate(currentDirection.GetNextClockwise());
-            }
+            //else if (Input.GetKeyDown(KeyCode.Q))
+            //{
+            //    Rotate(currentDirection.GetNextCounterclockwise());
+            //}
+            //else if (Input.GetKeyDown(KeyCode.E))
+            //{
+            //    Rotate(currentDirection.GetNextClockwise());
+            //}
         }
     }
 }

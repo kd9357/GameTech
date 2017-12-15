@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour {
     public Text stateText;
     public Text resetText;
     public Text treasureText;
+    public Text rockText;
+
+    public Canvas pauseCanvas;
     #endregion
 
     #region Private parameters
@@ -27,6 +30,9 @@ public class GameManager : MonoBehaviour {
 
     private Enemy enemyInstance;
     bool gameWon = false;
+
+    private int rockCount;
+    private bool paused = false;
     #endregion
 
     //Singleton instantiation
@@ -47,6 +53,9 @@ public class GameManager : MonoBehaviour {
         stateText.text = "";
         resetText.text = "";
         treasureText.text = "";
+        rockCount = 3;
+        rockText.text = "";
+        pauseCanvas.gameObject.SetActive(paused);
         StartCoroutine(BeginGame());
     }
 
@@ -55,7 +64,7 @@ public class GameManager : MonoBehaviour {
     {
         if(gameOver)
         {
-            playerInstance.disableMovement();
+            playerInstance.AllowMovement(false);
             enemyInstance.disableMovement();
             if (gameWon)
             {
@@ -72,17 +81,54 @@ public class GameManager : MonoBehaviour {
                 RestartGame();
             }
         }
+        if (Input.GetButtonDown("Cancel") && gameStarted)
+            TogglePause(!paused);
     }
 
+    public void TogglePause(bool p)
+    {
+        paused = p;
+        pauseCanvas.gameObject.SetActive(paused);
+        Time.timeScale = paused ? 0 : 1;
+        if (playerInstance != null)
+            playerInstance.AllowMovement(!paused);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
     public void GameOver(bool won)
     {
         gameOver = true;
         gameWon = won;
     }
 
+    public MazeCell GetPlayerCell()
+    {
+        return playerInstance.GetLocation();
+    }
+
+    public MazeCell GetEnemyCell()
+    {
+        return enemyInstance.GetCurrentCell();
+    }
+
+    public bool ThrowRock()
+    {
+        if (rockCount > 0)
+        {
+            --rockCount;
+            rockText.text = "Rocks: " + rockCount.ToString();
+            return true;
+        }
+        return false;
+    }
+
     private IEnumerator BeginGame()
     {
         //Instantiate Maze
+        TogglePause(false);
         Camera.main.clearFlags = CameraClearFlags.Skybox;
         Camera.main.rect = new Rect(0f, 0f, 1f, 1f);
         mazeInstance = Instantiate(mazePrefab) as Maze;
@@ -142,6 +188,8 @@ public class GameManager : MonoBehaviour {
         }
         enemyInstance.Activate(enemyCell, doors);
 
+        rockText.text = "Rocks: " + rockCount.ToString();
+
         gameStarted = true;
     }
 
@@ -149,9 +197,11 @@ public class GameManager : MonoBehaviour {
     {
         gameStarted = false;
         gameOver = false;
+        rockCount = 3;
         stateText.text = "";
         resetText.text = "";
         treasureText.text = "";
+        rockText.text = "";
         StopAllCoroutines();
         Destroy(mazeInstance.gameObject);
         if (playerInstance != null)
